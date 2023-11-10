@@ -16,20 +16,70 @@ export const validDate = (input) => {
 };
 
 export const validMenuItems = (input) => {
-  const menuItems = input.split(",").map(item => {
+  const menuItems = validMenuForm(input);
+
+  checkMenuItemsExist(menuItems);
+  checkDuplicateItems(menuItems);
+  checkOnlyDrinks(menuItems);
+  checkMaxItems(menuItems);
+
+  return menuItems;
+};
+
+const validMenuForm = (input) => {
+  const menuItems = input.split(",").map((item) => {
     const parts = item.split("-");
-    if(parts.length !== 2 || isNaN(parts[1]) || parts[1] < 1) {
+
+    if (parts.length !== 2 || isNaN(parts[1]) || parts[1] < 1) {
       throw new Error(ERROR_MESSAGE.INVALID_MENU);
     }
+
     const [food, count] = parts;
-    return { food, count: Number(count)};
+    return { food, count: Number(count) };
   });
 
-  // 1. 고객이 메뉴판에 없는 메뉴를 입력하는 경우
-  // 3. 메뉴 형식이 예시와 다른 경우
-  // 4. 중복 메뉴를 입력한 경우
-  // 5. 음료만 주문 시, 주문한 경우
-  // 6. 메뉴는 한 번에 최대 20개까지만 주문할 수 있습니다
-  
   return menuItems;
+}
+
+const checkMenuItemsExist = (menuItems) => {
+  const flatMenuList = Object.values(MENU_LIST).flatMap((category) =>
+    Object.values(category).map((item) => item.name)
+  );
+
+  menuItems.forEach((item) => {
+    if (!flatMenuList.includes(item.food)) {
+      throw new Error(ERROR_MESSAGE.INVALID_MENU);
+    }
+  });
+};
+
+const checkDuplicateItems = (menuItems) => {
+  const uniqueItems = new Set();
+
+  menuItems.forEach((item) => {
+    if (uniqueItems.has(item.food)) {
+      throw new Error(ERROR_MESSAGE.INVALID_MENU);
+    }
+
+    uniqueItems.add(item.food);
+  });
+};
+
+const checkOnlyDrinks = (menuItems) => {
+  const drinkNames = Object.values(MENU_LIST.drinks).map((drink) => drink.name);
+
+  if (menuItems.every((item) => drinkNames.includes(item.food))) {
+    throw new Error(ERROR_MESSAGE.INVALID_MENU);
+  }
+};
+
+const checkMaxItems = (menuItems) => {
+  let max = 20;
+
+  for (const item of menuItems) {
+    max -= item.count;
+    if (max < 0) {
+      throw new Error(ERROR_MESSAGE.INVALID_MENU);
+    }
+  }
 };
