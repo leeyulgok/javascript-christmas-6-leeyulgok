@@ -1,8 +1,15 @@
 import InputView from "./InputView.js";
+import OutputView from "./OutputView.js";
 
 class App {
   async run() {
-    InputView.readDate();
+    OutputView.printHello();
+    
+    const date = await InputView.readDate();
+    const menuItems = await InputView.readMenuItems();
+
+    OutputView.printEvent(date);
+    OutputView.printMenu(menuItems);
   }
 }
 
