@@ -1,6 +1,8 @@
+import InputView from "./InputView.js";
+
 class App {
   async run() {
-    console.log("init");
+    InputView.readDate();
   }
 }
 
