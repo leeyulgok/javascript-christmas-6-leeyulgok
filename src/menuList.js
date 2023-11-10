@@ -8,6 +8,7 @@ const MENU_LIST = {
   mains: {
     tBoneSteak: { name: "티본스테이크", price: 55000 },
     bbqRibs: { name: "바비큐립", price: 54000 },
+    seafoodPasta: { name: "해산물파스타", price: 35000 },
     christmasPasta: { name: "크리스마스파스타", price: 25000 },
   },
 
