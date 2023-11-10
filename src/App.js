@@ -1,5 +1,6 @@
 import InputView from "./InputView.js";
 import OutputView from "./OutputView.js";
+import OrderMenu from "./OrderMenu.js";
 
 class App {
   async run() {
@@ -7,9 +8,11 @@ class App {
     
     const date = await InputView.readDate();
     const menuItems = await InputView.readMenuItems();
+    const orderMenu = new OrderMenu(menuItems);
 
     OutputView.printEvent(date);
-    OutputView.printMenu(menuItems);
+    OutputView.printMenu(orderMenu);
+    OutputView.printBeforeDiscount(orderMenu);
   }
 }
 
