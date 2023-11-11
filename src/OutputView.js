@@ -13,8 +13,7 @@ const OutputView = {
   },
   
   printEvent(date) {
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const [month, day] = date.split("-");
 
     Console.print(`${month}월 ${day}일에 ` + DEFAULT_MESSAGE.EVENT)
   },

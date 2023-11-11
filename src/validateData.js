@@ -31,7 +31,9 @@ const changeDateType = (input) => {
   const MONTH = 11;
   const date = new Date(YEAR, MONTH, input);
   
-  return date;
+  const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getDay()}`;
+  
+  return formattedDate;
 };
 
 const validMenuForm = (input) => {
