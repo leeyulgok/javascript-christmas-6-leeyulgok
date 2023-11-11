@@ -12,7 +12,7 @@ export const validDate = (input) => {
     throw new Error(ERROR_MESSAGE.INVALID_DATE);
   }
 
-  return date;
+  return changeDateType(date);
 };
 
 export const validMenuItems = (input) => {
@@ -24,6 +24,14 @@ export const validMenuItems = (input) => {
   checkMaxItems(menuItems);
 
   return menuItems;
+};
+
+const changeDateType = (input) => {
+  const YEAR = 2023;
+  const MONTH = 11;
+  const date = new Date(YEAR, MONTH, input);
+  
+  return date;
 };
 
 const validMenuForm = (input) => {

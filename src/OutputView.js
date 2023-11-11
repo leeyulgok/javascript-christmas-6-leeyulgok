@@ -13,7 +13,10 @@ const OutputView = {
   },
   
   printEvent(date) {
-    Console.print(`12월 ${date}일에 ` + DEFAULT_MESSAGE.EVENT)
+    const month = (date.getMonth() + 1).toString();
+    const day = date.getDate().toString();
+
+    Console.print(`${month}월 ${day}일에 ` + DEFAULT_MESSAGE.EVENT)
   },
 
   printMenu(orderMenu) {
