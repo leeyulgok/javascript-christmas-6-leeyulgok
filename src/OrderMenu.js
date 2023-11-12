@@ -3,12 +3,11 @@ import MENU_LIST from "./menuList.js";
 class OrderMenu {
   #orderItems;
   #totalPrice;
-  #discount;
 
   constructor(orderItems) {
     this.#orderItems = orderItems;
     this.#totalPrice = 0;
-    this.#discount = 0;
+    this.#calculateTotalPrice();
   }
 
   get orderItems() {
@@ -19,11 +18,8 @@ class OrderMenu {
     return this.#totalPrice;
   }
 
-  get discount() {
-    return this.#discount;
-  }
 
-  calculateTotalPrice() {
+  #calculateTotalPrice() {
     this.#totalPrice = this.#orderItems.reduce((total, item) => {
       const price = this.findPrice(item.food);
       return total + price * item.count;

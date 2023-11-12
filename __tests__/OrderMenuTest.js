@@ -15,8 +15,6 @@ describe("주문한 메뉴 테스트", () => {
     ];
     const orderMenu = new OrderMenu(orderItems);
 
-    orderMenu.calculateTotalPrice();
-
     expect(orderMenu.totalPrice).toBe(95000);
   });
 
