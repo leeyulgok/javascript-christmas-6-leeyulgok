@@ -2,8 +2,11 @@ import MENU_LIST from "./menuList.js";
 
 class EventDiscount {
   #date;
+  #orderMenu;
 
-  constructor(date) {
+  constructor(orderMenu, date) {
+    this.#orderMenu = orderMenu;
+    this.#orderMenu.totalPrice;
     this.#date = date;
   }
 
@@ -11,11 +14,14 @@ class EventDiscount {
     return this.#date;
   }
 
-  defaultEventCondition(orderMenu) {
-    let isEvent = false;
-    orderMenu.calculateTotalPrice();
+  get orderMenu() {
+    return this.#orderMenu;
+  }
 
-    if (orderMenu.totalPrice > 10000) {
+  defaultEventCondition() {
+    let isEvent = false;
+
+    if (this.#orderMenu.totalPrice > 10000) {
       isEvent = true;
     }
 
@@ -37,12 +43,12 @@ class EventDiscount {
     return discount;
   }
 
-  weekDayDiscount(orderMenu) {
+  weekDayDiscount() {
     const day = this.#date.split("-")[2];
     const dessertNames = Object.values(MENU_LIST.desserts).map(
       (dessert) => dessert.name
     );
-    const orderItems = orderMenu.orderItems;
+    const orderItems = this.#orderMenu.orderItems;
     let discount = 0;
 
     if (day >= 0 && day <= 4) {
@@ -56,10 +62,10 @@ class EventDiscount {
     return discount;
   }
 
-  weekendDiscount(orderMenu) {
+  weekendDiscount() {
     const day = this.#date.split("-")[2];
     const mainNames = Object.values(MENU_LIST.mains).map((main) => main.name);
-    const orderItems = orderMenu.orderItems;
+    const orderItems = this.#orderMenu.orderItems;
     let discount = 0;
 
     if (day === "5" || day === "6") {
@@ -84,15 +90,40 @@ class EventDiscount {
     return discount;
   }
 
-  checkForGiftEvent(orderMenu) {
+  checkForGiftEvent() {
     let isGift = false;
-    orderMenu.calculateTotalPrice();
 
-    if (orderMenu.totalPrice > 130000) {
+    if (this.#orderMenu.totalPrice > 130000) {
       isGift = true;
     }
 
     return isGift;
+  }
+
+  totalDiscount() {
+    const countdown = this.calculateChristmasCountdownDiscount();
+    const weekDay = this.weekDayDiscount();
+    const weekend = this.weekendDiscount();
+    const special = this.specialDiscount();
+    const gift = this.checkForGiftEvent();
+    let discount = countdown + weekDay + weekend + special + (gift ? 25000 : 0);
+
+    return discount;
+  }
+
+  checkForBadgeEvent() {
+    let Badge;
+    const totalDiscount = this.totalDiscount();
+
+    if(totalDiscount >= 20000) {
+      return Badge = "산타";
+    } else if(totalDiscount >= 10000) {
+      return Badge = "트리";
+    } else if(totalDiscount >= 5000) {
+      return Badge = "별";
+    } else {
+      return Badge = "없음";
+    }
   }
 }
 
