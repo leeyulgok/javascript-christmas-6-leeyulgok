@@ -9,7 +9,7 @@ describe("사용자 입력 값 예외 테스트", () => {
   test("날짜 성공 테스트", () => {
     const date = 25;
 
-    expect(validDate(date)).toBe(25);
+    expect(validDate(date)).toBe('12-25-1');
   });
 
   test("날짜 예외 테스트: 문자의 경우", () => {
