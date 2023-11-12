@@ -67,4 +67,20 @@ describe("이벤트 할인 테스트", () => {
 
     expect(isGift).toBeTruthy();
   });
+
+  test("총할인 금액 계산", () => {
+    const date = "12-3-0";
+    const eventDiscount = new EventDiscount(orderMenu, date);
+    const discount = eventDiscount.totalDiscount();
+
+    expect(discount).toBe(29223);
+  });
+
+  test("이벤트 뱃지 확인", () => {
+    const date = "12-3-0";
+    const eventDiscount = new EventDiscount(orderMenu, date);
+    const badge = eventDiscount.checkForBadgeEvent();
+
+    expect(badge).toBe("산타");
+  });
 });
