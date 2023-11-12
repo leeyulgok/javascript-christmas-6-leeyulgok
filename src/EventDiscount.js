@@ -3,11 +3,15 @@ import MENU_LIST from "./menuList.js";
 class EventDiscount {
   #date;
   #orderMenu;
+  #gift;
+  #bedge;
 
   constructor(orderMenu, date) {
     this.#orderMenu = orderMenu;
     this.#orderMenu.totalPrice;
     this.#date = date;
+    this.#gift = "없음";
+    this.#bedge = "없음";
   }
 
   get date() {
@@ -16,6 +20,14 @@ class EventDiscount {
 
   get orderMenu() {
     return this.#orderMenu;
+  }
+
+  get gift() {
+    return this.#gift;
+  }
+
+  get bedge() {
+    return this.#bedge;
   }
 
   defaultEventCondition() {
@@ -91,13 +103,11 @@ class EventDiscount {
   }
 
   checkForGiftEvent() {
-    let isGift = false;
-
     if (this.#orderMenu.totalPrice > 130000) {
-      isGift = true;
+      this.#gift = { food: "샴페인", count: 1 };
     }
 
-    return isGift;
+    return this.gift;
   }
 
   totalDiscount() {
@@ -106,24 +116,36 @@ class EventDiscount {
     const weekend = this.weekendDiscount();
     const special = this.specialDiscount();
     const gift = this.checkForGiftEvent();
-    let discount = countdown + weekDay + weekend + special + (gift ? 25000 : 0);
+
+    let discount =
+      countdown +
+      weekDay +
+      weekend +
+      special +
+      (typeof gift !== "string" ? 25000 : 0);
 
     return discount;
   }
 
   checkForBadgeEvent() {
-    let Badge;
     const totalDiscount = this.totalDiscount();
 
-    if(totalDiscount >= 20000) {
-      return Badge = "산타";
-    } else if(totalDiscount >= 10000) {
-      return Badge = "트리";
-    } else if(totalDiscount >= 5000) {
-      return Badge = "별";
-    } else {
-      return Badge = "없음";
+    if (totalDiscount >= 20000) {
+      return (this.#bedge = "산타");
+    } else if (totalDiscount >= 10000) {
+      return (this.#bedge = "트리");
+    } else if (totalDiscount >= 5000) {
+      return (this.#bedge = "별");
     }
+  }
+
+  finalTotalPrice() {
+    const totalPrice =
+      this.#orderMenu.totalPrice -
+      this.totalDiscount() +
+      (typeof this.#gift !== "string" ? 25000 : 0);
+
+    return totalPrice;
   }
 }
 
