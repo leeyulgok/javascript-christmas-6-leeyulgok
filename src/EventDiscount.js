@@ -4,14 +4,14 @@ class EventDiscount {
   #date;
   #orderMenu;
   #gift;
-  #bedge;
+  #badge;
 
   constructor(orderMenu, date) {
     this.#orderMenu = orderMenu;
     this.#orderMenu.totalPrice;
     this.#date = date;
     this.#gift = "없음";
-    this.#bedge = "없음";
+    this.#badge = "없음";
   }
 
   get date() {
@@ -26,8 +26,13 @@ class EventDiscount {
     return this.#gift;
   }
 
-  get bedge() {
-    return this.#bedge;
+  get badge() {
+    return this.#badge;
+  }
+
+  parseDate() {
+    const [month, date, day] = this.#date.split("-").map(Number);
+    return { month, date, day };
   }
 
   defaultEventCondition() {
@@ -41,13 +46,15 @@ class EventDiscount {
   }
 
   calculateChristmasCountdownDiscount() {
-    let date = this.#date.split("-")[1];
+    const { date } = this.parseDate();
+    const DEFAULT_DISCOUNT = 1000;
+    const PLUS_DISCOUNT = 100;
+    
     let discount = 0;
-
     if (date < 26) {
-      discount = 1000;
+      discount = DEFAULT_DISCOUNT;
       while (date > 1) {
-        discount += 100;
+        discount += PLUS_DISCOUNT;
         date -= 1;
       }
     }
@@ -56,46 +63,48 @@ class EventDiscount {
   }
 
   weekDayDiscount() {
-    const day = this.#date.split("-")[2];
-    const dessertNames = Object.values(MENU_LIST.desserts).map(
-      (dessert) => dessert.name
-    );
+    const WEEKDAY_DISCOUNT = 2023;
+    const { day } = this.parseDate();
     const orderItems = this.#orderMenu.orderItems;
+  
     let discount = 0;
-
     if (day >= 0 && day <= 4) {
-      for (const item of orderItems) {
-        if (dessertNames.includes(item.food)) {
-          discount += item.count * 2023;
+      orderItems.forEach(item => {
+        const menuItem = MENU_LIST[item.food];
+        if (menuItem && menuItem.category === "desserts") {
+          discount += item.count * WEEKDAY_DISCOUNT;
         }
-      }
+      });
     }
-
+  
     return discount;
   }
 
   weekendDiscount() {
-    const day = this.#date.split("-")[2];
-    const mainNames = Object.values(MENU_LIST.mains).map((main) => main.name);
+    const WEEKEND_DISCOUNT = 2023;
+    const { day } = this.parseDate();
     const orderItems = this.#orderMenu.orderItems;
+  
     let discount = 0;
-
     if (day === "5" || day === "6") {
-      for (const item of orderItems) {
-        if (mainNames.includes(item.food)) {
-          discount += item.count * 2023;
+      orderItems.forEach(item => {
+        const menuItem = MENU_LIST[item.food];
+        if (menuItem && menuItem.category === "mains") {
+          discount += item.count * WEEKEND_DISCOUNT;
         }
-      }
+      });
     }
-
+  
     return discount;
   }
 
   specialDiscount() {
-    const [, christmas, day] = this.#date.split("-");
+    const { date, day } = this.parseDate();
+    const CHRISTMAS_DAY = "25";
+    const SUNDAY = "0"
+    
     let discount = 0;
-
-    if (christmas === "25" || day === "0") {
+    if (date === CHRISTMAS_DAY || day === SUNDAY) {
       discount += 1000;
     }
 
@@ -103,7 +112,7 @@ class EventDiscount {
   }
 
   checkForGiftEvent() {
-    if (this.#orderMenu.totalPrice > 130000) {
+    if (this.#orderMenu.totalPrice > 120000) {
       this.#gift = { food: "샴페인", count: 1 };
     }
 
@@ -122,7 +131,7 @@ class EventDiscount {
       weekDay +
       weekend +
       special +
-      (typeof gift !== "string" ? 25000 : 0);
+      (typeof gift === "object" ? 25000 : 0);
 
     return discount;
   }
@@ -131,11 +140,11 @@ class EventDiscount {
     const totalDiscount = this.totalDiscount();
 
     if (totalDiscount >= 20000) {
-      return (this.#bedge = "산타");
+      return (this.#badge = "산타");
     } else if (totalDiscount >= 10000) {
-      return (this.#bedge = "트리");
+      return (this.#badge = "트리");
     } else if (totalDiscount >= 5000) {
-      return (this.#bedge = "별");
+      return (this.#badge = "별");
     }
   }
 
@@ -143,7 +152,7 @@ class EventDiscount {
     const totalPrice =
       this.#orderMenu.totalPrice -
       this.totalDiscount() +
-      (typeof this.#gift !== "string" ? 25000 : 0);
+      (typeof this.#gift === "object" ? 25000 : 0);
 
     return totalPrice;
   }

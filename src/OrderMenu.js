@@ -27,7 +27,7 @@ class OrderMenu {
   }
 
   findPrice(foodName) {
-    return MENU_LIST[foodName] || null;
+    return MENU_LIST[foodName] ? MENU_LIST[foodName].price : null;
   }
 }
 
