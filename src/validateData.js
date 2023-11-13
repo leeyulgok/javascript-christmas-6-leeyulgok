@@ -30,9 +30,11 @@ const changeDateType = (input) => {
   const YEAR = 2023;
   const MONTH = 11;
   const date = new Date(YEAR, MONTH, input);
-  
-  const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getDay()}`;
-  
+
+  const formattedDate = `${
+    date.getMonth() + 1
+  }-${date.getDate()}-${date.getDay()}`;
+
   return formattedDate;
 };
 
@@ -49,15 +51,11 @@ const validMenuForm = (input) => {
   });
 
   return menuItems;
-}
+};
 
 const checkMenuItemsExist = (menuItems) => {
-  const flatMenuList = Object.values(MENU_LIST).flatMap((category) =>
-    Object.values(category).map((item) => item.name)
-  );
-
   menuItems.forEach((item) => {
-    if (!flatMenuList.includes(item.food)) {
+    if (!MENU_LIST[item.food]) {
       throw new Error(ERROR_MESSAGE.INVALID_MENU);
     }
   });
@@ -76,7 +74,9 @@ const checkDuplicateItems = (menuItems) => {
 };
 
 const checkOnlyDrinks = (menuItems) => {
-  const drinkNames = Object.values(MENU_LIST.drinks).map((drink) => drink.name);
+  const drinkNames = Object.values(MENU_LIST)
+    .filter((item) => item.category === "drinks")
+    .map((drink) => drink.name);
 
   if (menuItems.every((item) => drinkNames.includes(item.food))) {
     throw new Error(ERROR_MESSAGE.INVALID_MENU);
