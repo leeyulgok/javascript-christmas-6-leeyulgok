@@ -8,36 +8,25 @@ const CONSOLE_MESSAGE = {
 
 const InputView = {
   async readDate() {
-    let firstAttempt = true;
-
-    while (true) {
-      try {
-        const input = await Console.readLineAsync(firstAttempt ? CONSOLE_MESSAGE.BOOK_DATE : "");
-        firstAttempt = false;
-
-        const date = validDate(input);
-        return date;
-      } catch (error) {
-        Console.print(`${error.message}`);
-      }
-    }
+    return readInput(CONSOLE_MESSAGE.BOOK_DATE, validDate);
   },
 
   async readMenuItems() {
-    let firstAttempt = true;
-
-    while (true) {
-      try {
-        const input = await Console.readLineAsync(firstAttempt ? CONSOLE_MESSAGE.MENU_AND_COUNT : "");
-        firstAttempt = false;
-
-        const userMenu = validMenuItems(input);
-        return userMenu;
-      } catch (error) {
-        Console.print(`${error.message}`);
-      }
-    }
+    return readInput(CONSOLE_MESSAGE.MENU_AND_COUNT, validMenuItems);
   },
+};
+
+const readInput = async (message, validationFunction) => {
+  let firstAttempt = true;
+  while (true) {
+    try {
+      const input = await Console.readLineAsync(firstAttempt ? message : "");
+      firstAttempt = false;
+      return validationFunction(input);
+    } catch (error) {
+      Console.print(`${error.message}`);
+    }
+  }
 };
 
 export default InputView;

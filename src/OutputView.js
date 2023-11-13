@@ -9,9 +9,15 @@ const DEFAULT_MESSAGE = {
   DISCOUNT_LIST: "\n<혜택 내역>",
   TOTAL_DISCOUNT: "\n<총혜택 금액>",
   FINAL_TOTAL_PRICE: "\n<할인 후 예상 결제 금액>",
-  EVENT_BEDGE: "\n<12월 이벤트 배지>",
+  EVENT_BADGE: "\n<12월 이벤트 배지>",
   NOTHING: "없음",
 };
+
+const EVENT_TITLE = {
+  COUNTDOWN: "크리스마스 디데이 할인",
+  SPECIAL: "특별 할인",
+  GIFT: "증정 이벤트",
+}
 
 const OutputView = {
   printHello() {
@@ -26,98 +32,94 @@ const OutputView = {
 
   printMenu(orderMenu) {
     const orderItems = orderMenu.orderItems;
+
     Console.print(DEFAULT_MESSAGE.ORDER_MENU);
-    for (let i = 0; i < orderItems.length; i++) {
-      const { food, count } = orderItems[i];
+    orderItems.forEach(({ food, count }) => {
       Console.print(`${food} ${count}개`);
-    }
+    });
   },
 
   printEventDiscount(eventdiscount) {
     const isEvent = eventdiscount.defaultEventCondition();
-    
-    printBeforeDiscount(eventdiscount);
-    printGift(isEvent, eventdiscount);
-    printDiscountList(isEvent, eventdiscount);
-    printTotalDiscount(isEvent, eventdiscount);
-    printFinalTotalPrice(eventdiscount);
-    printBedge(eventdiscount);
+
+    this.printBeforeDiscount(eventdiscount);
+    this.printGift(isEvent, eventdiscount);
+    this.printDiscountList(isEvent, eventdiscount);
+    this.printTotalDiscount(isEvent, eventdiscount);
+    this.printFinalTotalPrice(eventdiscount);
+    this.printBadge(eventdiscount);
+  },
+
+  printBeforeDiscount(eventdiscount) {
+    const totalPrice = eventdiscount.orderMenu.totalPrice;
+    Console.print(DEFAULT_MESSAGE.BEFORE_DISCOUNT);
+    Console.print(`${totalPrice}원`);
+  },
+
+  printGift(isEvent, eventdiscount) {
+    const gift = eventdiscount.checkForGiftEvent();
+    const giftMessage =
+      isEvent && typeof gift === "object"
+        ? `${gift.food} ${gift.count}개`
+        : DEFAULT_MESSAGE.NOTHING;
+
+    Console.print(DEFAULT_MESSAGE.GIFT);
+    Console.print(giftMessage);
+  },
+
+  printDiscountList(isEvent, eventdiscount) {
+    const countdown = eventdiscount.calculateChristmasCountdownDiscount();
+    const week = this.isWeek(eventdiscount);
+    const special = eventdiscount.specialDiscount();
+    const gift = eventdiscount.checkForGiftEvent();
+
+    Console.print(DEFAULT_MESSAGE.DISCOUNT_LIST);
+    if (isEvent) {
+      Console.print(`${EVENT_TITLE.COUNTDOWN}: -${countdown}원`);
+      Console.print(`${week.day} 할인: -${week.discount}원`);
+      Console.print(`${EVENT_TITLE.SPECIAL}: -${special}원`);
+      Console.print(`${EVENT_TITLE.GIFT}: ${typeof gift === "object" ? -25000 : 0}원`);
+    } else {
+      Console.print(DEFAULT_MESSAGE.NOTHING);
+    }
+  },
+
+  printTotalDiscount(isEvent, eventdiscount) {
+    const totalDiscount = eventdiscount.totalDiscount();
+
+    Console.print(DEFAULT_MESSAGE.TOTAL_DISCOUNT);
+    if (isEvent) {
+      Console.print(`-${totalDiscount}원`);
+    } else {
+      Console.print(DEFAULT_MESSAGE.NOTHING);
+    }
+  },
+
+  printFinalTotalPrice(eventdiscount) {
+    const totalPrice = eventdiscount.finalTotalPrice();
+
+    Console.print(DEFAULT_MESSAGE.FINAL_TOTAL_PRICE);
+    Console.print(`${totalPrice}원`);
+  },
+
+  printBadge(eventdiscount) {
+    const badge = eventdiscount.badge;
+
+    Console.print(DEFAULT_MESSAGE.EVENT_BADGE);
+    Console.print(`${badge}`);
+  },
+
+  isWeek(eventdiscount) {
+    const day = eventdiscount.date.split("-")[2];
+
+    if (day === "5" || day === "6") {
+      let weekend = { day: "주말", discount: eventdiscount.weekendDiscount() };
+      return weekend;
+    } else {
+      let weekDay = { day: "평일", discount: eventdiscount.weekDayDiscount() };
+      return weekDay;
+    }
   },
 };
-
-const printBeforeDiscount = (eventdiscount) => {
-  const totalPrice = eventdiscount.orderMenu.totalPrice;
-  Console.print(DEFAULT_MESSAGE.BEFORE_DISCOUNT);
-  Console.print(`${totalPrice}원`);
-};
-
-const printGift = (isEvent, eventdiscount) => {
-  const gift = eventdiscount.checkForGiftEvent();
-
-  Console.print(DEFAULT_MESSAGE.GIFT);
-  if (isEvent) {
-    if (typeof gift !== "string") {
-      Console.print(`${gift.food} ${gift.count}개`);
-    } else {
-      Console.print(gift);
-    }
-  } else {
-    Console.print(DEFAULT_MESSAGE.NOTHING);
-  }
-};
-
-const printDiscountList = (isEvent, eventdiscount) => {
-  const countdown = eventdiscount.calculateChristmasCountdownDiscount();
-  const week = isWeek(eventdiscount);
-  const special = eventdiscount.specialDiscount();
-  const gift = eventdiscount.checkForGiftEvent();  
-
-  Console.print(DEFAULT_MESSAGE.DISCOUNT_LIST);
-  if(isEvent) {
-    Console.print(`크리스마스 디데이 할인: -${countdown}원`);
-    Console.print(`${week.day} 할인: -${week.discount}원`);
-    Console.print(`특별 할인: -${special}원`);
-    Console.print(`증정 이벤트: ${typeof gift !== 'string' ? -25000 : 0}원`);
-  } else {
-    Console.print(DEFAULT_MESSAGE.NOTHING);
-  }
-};
-
-const isWeek = (eventdiscount) => {
-  const day = eventdiscount.date.split("-")[2];
-
-  if(day === '5' || day === '6') {
-    let weekend = { day: "주말", discount: eventdiscount.weekendDiscount()};
-    return weekend;
-  } else {
-    let weekDay = { day: "평일", discount: eventdiscount.weekDayDiscount()};
-    return weekDay;
-  }
-};
-
-const printTotalDiscount = (isEvent, eventdiscount) => {
-  const totalDiscount = eventdiscount.totalDiscount();
-
-  Console.print(DEFAULT_MESSAGE.TOTAL_DISCOUNT);
-  if(isEvent) {
-    Console.print(`-${totalDiscount}원`);
-  } else {
-    Console.print(DEFAULT_MESSAGE.NOTHING);
-  }
-};
-
-const printFinalTotalPrice = (eventdiscount) => {
-  const totalPrice = eventdiscount.finalTotalPrice();
-
-  Console.print(DEFAULT_MESSAGE.FINAL_TOTAL_PRICE);
-  Console.print(`${totalPrice}원`);
-}
-
-const printBedge = (eventdiscount) => {
-  const bedge = eventdiscount.bedge;
-  
-  Console.print(DEFAULT_MESSAGE.EVENT_BEDGE);
-  Console.print(`${bedge}`);
-}
 
 export default OutputView;
