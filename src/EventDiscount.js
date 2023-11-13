@@ -46,7 +46,7 @@ class EventDiscount {
   }
 
   calculateChristmasCountdownDiscount() {
-    const { date } = this.parseDate();
+    let { date } = this.parseDate();
     const DEFAULT_DISCOUNT = 1000;
     const PLUS_DISCOUNT = 100;
     
@@ -86,7 +86,7 @@ class EventDiscount {
     const orderItems = this.#orderMenu.orderItems;
   
     let discount = 0;
-    if (day === "5" || day === "6") {
+    if (day === 5 || day === 6) {
       orderItems.forEach(item => {
         const menuItem = MENU_LIST[item.food];
         if (menuItem && menuItem.category === "mains") {
@@ -100,8 +100,8 @@ class EventDiscount {
 
   specialDiscount() {
     const { date, day } = this.parseDate();
-    const CHRISTMAS_DAY = "25";
-    const SUNDAY = "0"
+    const CHRISTMAS_DAY = 25;
+    const SUNDAY = 0
     
     let discount = 0;
     if (date === CHRISTMAS_DAY || day === SUNDAY) {
@@ -146,6 +146,8 @@ class EventDiscount {
     } else if (totalDiscount >= 5000) {
       return (this.#badge = "별");
     }
+    
+    return this.#badge;
   }
 
   finalTotalPrice() {
