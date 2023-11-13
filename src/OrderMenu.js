@@ -27,13 +27,7 @@ class OrderMenu {
   }
 
   findPrice(foodName) {
-    for (const category of Object.values(MENU_LIST)) {
-      for (const item of Object.values(category)) {
-        if (item.name === foodName) {
-          return item.price;
-        }
-      }
-    }
+    return MENU_LIST[foodName] || null;
   }
 }
 
