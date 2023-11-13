@@ -1,27 +1,23 @@
 const MENU_LIST = {
-  appetizers: {
-    mushroomSoup: { name: "양송이수프", price: 6000 },
-    tapas: { name: "타파스", price: 5500 },
-    caesarSalad: { name: "시저샐러드", price: 8000 },
-  },
+  // 에피타이저
+  "양송이수프": 6000,
+  "타파스": 5500,
+  "시저샐러드": 8000,
 
-  mains: {
-    tBoneSteak: { name: "티본스테이크", price: 55000 },
-    bbqRibs: { name: "바비큐립", price: 54000 },
-    seafoodPasta: { name: "해산물파스타", price: 35000 },
-    christmasPasta: { name: "크리스마스파스타", price: 25000 },
-  },
+  // 메인
+  "티본스테이크": 55000,
+  "바비큐립": 54000,
+  "해산물파스타": 35000,
+  "크리스마스파스타": 25000,
 
-  desserts: {
-    chocolateCake: { name: "초코케이크", price: 15000 },
-    iceCream: { name: "아이스크림", price: 5000 },
-  },
+  // 디저트
+  "초코케이크": 15000,
+  "아이스크림": 5000,
 
-  drinks: {
-    zeroCola: { name: "제로콜라", price: 3000 },
-    redWine: { name: "레드와인", price: 60000 },
-    champagne: { name: "샴페인", price: 25000 },
-  },
+  // 드링크
+  "제로콜라": 3000,
+  "레드와인": 60000,
+  "샴페인": 25000,
 };
 
 export default MENU_LIST;
