@@ -12,6 +12,14 @@ describe("사용자 입력 값 예외 테스트", () => {
     expect(validDate(date)).toBe('12-25-1');
   });
 
+  test("날짜 성공 테스트: 경계값", () => {
+    const firstDate = 1;
+    const finalDate = 31;
+
+    expect(validDate(firstDate)).toBe('12-1-5');
+    expect(validDate(finalDate)).toBe('12-31-0');
+  });
+
   test("날짜 예외 테스트: 문자의 경우", () => {
     const string = "string";
 
@@ -39,6 +47,12 @@ describe("사용자 입력 값 예외 테스트", () => {
     ];
 
     expect(validMenuItems(menuItems)).toEqual(successMenu);
+  });
+
+  test("메뉴 예외 테스트: 아무 것도 입력을 하지 않은 경우", () => {
+    const menuItems = "";
+
+    expect(() => validMenuItems(menuItems)).toThrow(INVALID_MENU_MESSAGE);
   });
 
   test("메뉴 예외 테스트: 메뉴판에 없는 메뉴를 입력하는 경우", () => {
