@@ -120,6 +120,10 @@ class EventDiscount {
   }
 
   totalDiscount() {
+    if(!this.defaultEventCondition()) {
+      return 0;
+    }
+    
     const countdown = this.calculateChristmasCountdownDiscount();
     const weekDay = this.weekDayDiscount();
     const weekend = this.weekendDiscount();
