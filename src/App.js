@@ -9,6 +9,7 @@ class App {
     
     const date = await InputView.readDate();
     const menuItems = await InputView.readMenuItems();
+    
     const orderMenu = new OrderMenu(menuItems);
     const eventdiscount = new EventDiscount(orderMenu, date);
     

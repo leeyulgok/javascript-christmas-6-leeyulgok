@@ -18,7 +18,6 @@ class OrderMenu {
     return this.#totalPrice;
   }
 
-
   #calculateTotalPrice() {
     this.#totalPrice = this.#orderItems.reduce((total, item) => {
       const price = this.findPrice(item.food);

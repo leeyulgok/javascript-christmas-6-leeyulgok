@@ -10,8 +10,8 @@ class EventDiscount {
     this.#orderMenu = orderMenu;
     this.#orderMenu.totalPrice;
     this.#date = date;
-    this.#gift = "없음";
-    this.#badge = "없음";
+    this.#gift = '없음';
+    this.#badge = '없음';
   }
 
   get date() {
@@ -31,7 +31,7 @@ class EventDiscount {
   }
 
   parseDate() {
-    const [month, date, day] = this.#date.split("-").map(Number);
+    const [month, date, day] = this.#date.split('-').map(Number);
     return { month, date, day };
   }
 
@@ -71,7 +71,7 @@ class EventDiscount {
     if (day >= 0 && day <= 4) {
       orderItems.forEach(item => {
         const menuItem = MENU_LIST[item.food];
-        if (menuItem && menuItem.category === "desserts") {
+        if (menuItem && menuItem.category === 'desserts') {
           discount += item.count * WEEKDAY_DISCOUNT;
         }
       });
@@ -89,7 +89,7 @@ class EventDiscount {
     if (day === 5 || day === 6) {
       orderItems.forEach(item => {
         const menuItem = MENU_LIST[item.food];
-        if (menuItem && menuItem.category === "mains") {
+        if (menuItem && menuItem.category === 'mains') {
           discount += item.count * WEEKEND_DISCOUNT;
         }
       });
@@ -113,7 +113,7 @@ class EventDiscount {
 
   checkForGiftEvent() {
     if (this.#orderMenu.totalPrice > 120000) {
-      this.#gift = { food: "샴페인", count: 1 };
+      this.#gift = { food: '샴페인', count: 1 };
     }
 
     return this.gift;
@@ -130,12 +130,8 @@ class EventDiscount {
     const special = this.specialDiscount();
     const gift = this.checkForGiftEvent();
 
-    let discount =
-      countdown +
-      weekDay +
-      weekend +
-      special +
-      (typeof gift === "object" ? 25000 : 0);
+    let discount = countdown + weekDay + weekend + special +
+      (typeof gift === 'object' ? 25000 : 0);
 
     return discount;
   }
@@ -144,11 +140,11 @@ class EventDiscount {
     const totalDiscount = this.totalDiscount();
 
     if (totalDiscount >= 20000) {
-      return (this.#badge = "산타");
+      return (this.#badge = '산타');
     } else if (totalDiscount >= 10000) {
-      return (this.#badge = "트리");
+      return (this.#badge = '트리');
     } else if (totalDiscount >= 5000) {
-      return (this.#badge = "별");
+      return (this.#badge = '별');
     }
     
     return this.#badge;
@@ -158,7 +154,7 @@ class EventDiscount {
     const totalPrice =
       this.#orderMenu.totalPrice -
       this.totalDiscount() +
-      (typeof this.#gift === "object" ? 25000 : 0);
+      (typeof this.#gift === 'object' ? 25000 : 0);
 
     return totalPrice;
   }

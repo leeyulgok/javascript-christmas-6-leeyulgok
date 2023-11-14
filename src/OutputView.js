@@ -1,22 +1,22 @@
 import { Console } from "@woowacourse/mission-utils";
 
 const DEFAULT_MESSAGE = {
-  HELLO: "안녕하세요! 우테코 식당 12월 이벤트 플래너입니다.",
-  EVENT: "우테코 식당에서 받을 이벤트 혜택 미리 보기!",
-  ORDER_MENU: "\n<주문 메뉴>",
-  BEFORE_DISCOUNT: "\n<할인 전 총주문 금액>",
-  GIFT: "\n<증정 메뉴>",
-  DISCOUNT_LIST: "\n<혜택 내역>",
-  TOTAL_DISCOUNT: "\n<총혜택 금액>",
-  FINAL_TOTAL_PRICE: "\n<할인 후 예상 결제 금액>",
-  EVENT_BADGE: "\n<12월 이벤트 배지>",
-  NOTHING: "없음",
+  HELLO: '안녕하세요! 우테코 식당 12월 이벤트 플래너입니다.',
+  EVENT: '우테코 식당에서 받을 이벤트 혜택 미리 보기!',
+  ORDER_MENU: '\n<주문 메뉴>',
+  BEFORE_DISCOUNT: '\n<할인 전 총주문 금액>',
+  GIFT: '\n<증정 메뉴>',
+  DISCOUNT_LIST: '\n<혜택 내역>',
+  TOTAL_DISCOUNT: '\n<총혜택 금액>',
+  FINAL_TOTAL_PRICE: '\n<할인 후 예상 결제 금액>',
+  EVENT_BADGE: '\n<12월 이벤트 배지>',
+  NOTHING: '없음'
 };
 
 const EVENT_TITLE = {
-  COUNTDOWN: "크리스마스 디데이 할인",
-  SPECIAL: "특별 할인",
-  GIFT: "증정 이벤트",
+  COUNTDOWN: '크리스마스 디데이 할인',
+  SPECIAL: '특별 할인',
+  GIFT: '증정 이벤트',
 };
 
 const OutputView = {
@@ -25,7 +25,7 @@ const OutputView = {
   },
 
   printEvent(date) {
-    const [month, day] = date.split("-");
+    const [month, day] = date.split('-');
 
     Console.print(`${month}월 ${day}일에 ` + DEFAULT_MESSAGE.EVENT);
   },
@@ -61,7 +61,7 @@ const OutputView = {
   printGift(isEvent, eventdiscount) {
     const gift = eventdiscount.checkForGiftEvent();
     const giftMessage =
-      isEvent && typeof gift === "object"
+      isEvent && typeof gift === 'object'
         ? `${gift.food} ${gift.count}개`
         : DEFAULT_MESSAGE.NOTHING;
 
@@ -92,7 +92,7 @@ const OutputView = {
     this.printDiscountInformation(EVENT_TITLE.COUNTDOWN, countdown);
     this.printDiscountInformation(`${week.day} 할인`, week.discount);
     this.printDiscountInformation(EVENT_TITLE.SPECIAL, special);
-    this.printDiscountInformation(EVENT_TITLE.GIFT, typeof gift === "object" ? 25000 : 0);
+    this.printDiscountInformation(EVENT_TITLE.GIFT, typeof gift === 'object' ? 25000 : 0);
   },
 
   printTotalDiscount(isEvent, eventdiscount) {
@@ -124,19 +124,19 @@ const OutputView = {
   },
 
   isWeek(eventdiscount) {
-    const day = eventdiscount.date.split("-")[2];
+    const day = eventdiscount.date.split('-')[2];
 
-    if (day === "5" || day === "6") {
-      let weekend = { day: "주말", discount: eventdiscount.weekendDiscount() };
+    if (day === '5' || day === '6') {
+      let weekend = { day: '주말', discount: eventdiscount.weekendDiscount() };
       return weekend;
     } else {
-      let weekDay = { day: "평일", discount: eventdiscount.weekDayDiscount() };
+      let weekDay = { day: '평일', discount: eventdiscount.weekDayDiscount() };
       return weekDay;
     }
   },
 
   formatAmount(amount) {
-    return new Intl.NumberFormat("ko-KR").format(amount);
+    return new Intl.NumberFormat('ko-KR').format(amount);
   },
 };
 

@@ -1,10 +1,11 @@
 import MENU_LIST from "./menuList.js";
 
 const ERROR_MESSAGE = {
-  INVALID_DATE: "[ERROR] 유효하지 않은 날짜입니다. 다시 입력해 주세요.",
-  INVALID_MENU: "[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.",
+  INVALID_DATE: '[ERROR] 유효하지 않은 날짜입니다. 다시 입력해 주세요.',
+  INVALID_MENU: '[ERROR] 유효하지 않은 주문입니다. 다시 입력해 주세요.',
 };
 
+// 날짜 유효성 검사
 export const validDate = (input) => {
   let date = parseInt(input, 10);
 
@@ -15,6 +16,7 @@ export const validDate = (input) => {
   return changeDateType(date);
 };
 
+// 메뉴 유효성 검사
 export const validMenuItems = (input) => {
   const menuItems = validMenuForm(input);
 
@@ -39,18 +41,17 @@ const changeDateType = (input) => {
 };
 
 const validMenuForm = (input) => {
-  const menuItems = input.split(",").map((item) => {
-    const parts = item.split("-");
+  return input.split(',').map((item) => convertToMenuItem(item));
+};
 
-    if (parts.length !== 2 || isNaN(parts[1]) || parts[1] < 1) {
-      throw new Error(ERROR_MESSAGE.INVALID_MENU);
-    }
+const convertToMenuItem = (item) => {
+  const parts = item.split('-');
 
-    const [food, count] = parts;
-    return { food, count: Number(count) };
-  });
+  if (parts.length !== 2 || isNaN(parts[1]) || parts[1] < 1) {
+    throw new Error(ERROR_MESSAGE.INVALID_MENU);
+  }
 
-  return menuItems;
+  return { food: parts[0], count: Number(parts[1]) };
 };
 
 const checkMenuItemsExist = (menuItems) => {
@@ -75,7 +76,7 @@ const checkDuplicateItems = (menuItems) => {
 
 const checkOnlyDrinks = (menuItems) => {
   const drinkNames = Object.values(MENU_LIST)
-    .filter((item) => item.category === "drinks")
+    .filter((item) => item.category === 'drinks')
     .map((drink) => drink.name);
 
   if (menuItems.every((item) => drinkNames.includes(item.food))) {
