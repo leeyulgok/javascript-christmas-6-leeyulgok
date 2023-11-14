@@ -70,8 +70,10 @@ const OutputView = {
   },
 
   printDiscountInformation(title, amount) {
-    const formattedAmount = this.formatAmount(amount);
-    Console.print(`${title}: -${formattedAmount}원`);
+    if (amount > 0) {
+      const formattedAmount = this.formatAmount(amount);
+      Console.print(`${title}: -${formattedAmount}원`);
+    }
   },
 
   printDiscountList(isEvent, eventdiscount) {
