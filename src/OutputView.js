@@ -17,7 +17,7 @@ const EVENT_TITLE = {
   COUNTDOWN: "크리스마스 디데이 할인",
   SPECIAL: "특별 할인",
   GIFT: "증정 이벤트",
-}
+};
 
 const OutputView = {
   printHello() {
@@ -52,8 +52,10 @@ const OutputView = {
 
   printBeforeDiscount(eventdiscount) {
     const totalPrice = eventdiscount.orderMenu.totalPrice;
+    const amount = this.formatAmount(totalPrice);
+
     Console.print(DEFAULT_MESSAGE.BEFORE_DISCOUNT);
-    Console.print(`${totalPrice}원`);
+    Console.print(`${amount}원`);
   },
 
   printGift(isEvent, eventdiscount) {
@@ -67,29 +69,37 @@ const OutputView = {
     Console.print(giftMessage);
   },
 
+  printDiscountInformation(title, amount) {
+    const formattedAmount = this.formatAmount(amount);
+    Console.print(`${title}: -${formattedAmount}원`);
+  },
+
   printDiscountList(isEvent, eventdiscount) {
+    Console.print(DEFAULT_MESSAGE.DISCOUNT_LIST);
+    
+    if(!isEvent) {
+      Console.print(DEFAULT_MESSAGE.NOTHING);
+      return;
+    };
+
     const countdown = eventdiscount.calculateChristmasCountdownDiscount();
     const week = this.isWeek(eventdiscount);
     const special = eventdiscount.specialDiscount();
-    const gift = eventdiscount.checkForGiftEvent();
-
-    Console.print(DEFAULT_MESSAGE.DISCOUNT_LIST);
-    if (isEvent) {
-      Console.print(`${EVENT_TITLE.COUNTDOWN}: -${countdown}원`);
-      Console.print(`${week.day} 할인: -${week.discount}원`);
-      Console.print(`${EVENT_TITLE.SPECIAL}: -${special}원`);
-      Console.print(`${EVENT_TITLE.GIFT}: ${typeof gift === "object" ? -25000 : 0}원`);
-    } else {
-      Console.print(DEFAULT_MESSAGE.NOTHING);
-    }
+    const gift = eventdiscount.checkForGiftEvent();    
+    
+    this.printDiscountInformation(EVENT_TITLE.COUNTDOWN, countdown);
+    this.printDiscountInformation(`${week.day} 할인`, week.discount);
+    this.printDiscountInformation(EVENT_TITLE.SPECIAL, special);
+    this.printDiscountInformation(EVENT_TITLE.GIFT, typeof gift === "object" ? 25000 : 0);
   },
 
   printTotalDiscount(isEvent, eventdiscount) {
     const totalDiscount = eventdiscount.totalDiscount();
+    const amount = this.formatAmount(totalDiscount);
 
     Console.print(DEFAULT_MESSAGE.TOTAL_DISCOUNT);
     if (isEvent) {
-      Console.print(`-${totalDiscount}원`);
+      Console.print(`-${amount}원`);
     } else {
       Console.print(DEFAULT_MESSAGE.NOTHING);
     }
@@ -97,12 +107,14 @@ const OutputView = {
 
   printFinalTotalPrice(eventdiscount) {
     const totalPrice = eventdiscount.finalTotalPrice();
+    const amount = this.formatAmount(totalPrice);
 
     Console.print(DEFAULT_MESSAGE.FINAL_TOTAL_PRICE);
-    Console.print(`${totalPrice}원`);
+    Console.print(`${amount}원`);
   },
 
   printBadge(eventdiscount) {
+    eventdiscount.checkForBadgeEvent();
     const badge = eventdiscount.badge;
 
     Console.print(DEFAULT_MESSAGE.EVENT_BADGE);
@@ -119,6 +131,10 @@ const OutputView = {
       let weekDay = { day: "평일", discount: eventdiscount.weekDayDiscount() };
       return weekDay;
     }
+  },
+
+  formatAmount(amount) {
+    return new Intl.NumberFormat("ko-KR").format(amount);
   },
 };
 
